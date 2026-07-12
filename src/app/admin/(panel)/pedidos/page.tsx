@@ -2,9 +2,10 @@ import Link from "next/link";
 import { CalendarDays, MapPin, Package, Phone } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { formatCurrency } from "@/lib/domain";
-import { OrderStatusForm, ORDER_STATUS } from "@/components/admin/order-status-form";
+import { OrderStatusForm } from "@/components/admin/order-status-form";
 import type { OrderStatus } from "@/types/database";
 import { cn } from "@/lib/utils";
+import { getOrderStatus } from "@/lib/order-status";
 
 type OrderItem = { id:string; quantity:number; product_name:string; unit_price:number; subtotal:number };
 type Order = { id:string; order_number:string; customer_name:string; customer_phone:string; customer_email:string|null; customer_address:string|null; notes:string|null; total:number; status:OrderStatus; created_at:string; order_items:OrderItem[] };
@@ -35,7 +36,7 @@ export default async function OrdersPage({ searchParams }: { searchParams:Promis
 
     {!visible.length ? <div className="card p-12 text-center"><Package className="mx-auto text-cherry" size={46}/><h3 className="mt-4 text-xl font-black">No hay pedidos en esta sección</h3><p className="mt-2 text-stone-600">Cuando haya pedidos con este estado aparecerán aquí.</p></div> :
       <div className="space-y-5">{visible.map(order => {
-        const status = ORDER_STATUS[order.status] ?? ORDER_STATUS.new;
+        const status = getOrderStatus(order.status);
         const date = new Intl.DateTimeFormat("es-MX",{dateStyle:"medium",timeStyle:"short",timeZone:"America/Mexico_City"}).format(new Date(order.created_at));
         return <article className="card overflow-hidden" key={order.id}>
           <div className="flex flex-col gap-4 border-b border-[#eadfcd] p-5 sm:flex-row sm:items-center sm:justify-between">

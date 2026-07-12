@@ -1,0 +1,1 @@
+import{test,expect}from"@playwright/test";test('catálogo y carrito son navegables',async({page})=>{await page.goto('/productos');await expect(page.getByRole('heading',{name:'Todos los productos'})).toBeVisible();await page.goto('/carrito');await expect(page.getByRole('heading',{name:'Tu carrito'})).toBeVisible()})

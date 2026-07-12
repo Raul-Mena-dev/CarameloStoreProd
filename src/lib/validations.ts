@@ -1,0 +1,4 @@
+import { z } from "zod";
+export const checkoutBaseSchema = z.object({customerName:z.string().trim().min(3,"Escribe tu nombre completo").max(160),customerPhone:z.string().trim().min(8,"Escribe un teléfono válido").max(30),customerEmail:z.union([z.literal(""),z.string().email("Correo no válido")]).optional(),deliveryMethod:z.literal("local_delivery"),customerAddress:z.string().trim().min(8,"Escribe la dirección completa").max(500),notes:z.string().trim().max(1000).optional(),consent:z.boolean().refine(Boolean,"Debes aceptar ser contactado"),idempotencyKey:z.string().uuid(),items:z.array(z.object({productId:z.string().uuid(),quantity:z.number().int().positive().max(99)})).min(1,"El carrito está vacío")});
+export const checkoutSchema=checkoutBaseSchema;
+export type CheckoutInput=z.infer<typeof checkoutSchema>;
